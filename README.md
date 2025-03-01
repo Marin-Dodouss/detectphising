@@ -1,3 +1,2 @@
 # detectphising
-
-[Edit in StackBlitz next generation editor ⚡️](https://stackblitz.com/~/github.com/Marin-Dodouss/detectphising)
+Quick website to test your family, team and friends in order to reduce phising attack consequences. Stay educated
