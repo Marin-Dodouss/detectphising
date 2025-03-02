@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  AlertTriangle,
   CheckCircle,
   XCircle,
   Share2,
@@ -15,51 +14,14 @@ function App() {
   const [answers, setAnswers] = useState<boolean[]>([]);
   const [gameStarted, setGameStarted] = useState(false);
   const [username, setUsername] = useState('');
-  const [selectedQuestions, setSelectedQuestions] = useState<typeof questions>(
-    []
-  );
+  const [selectedQuestions, setSelectedQuestions] = useState<typeof questions>([]);
   const [shareText, setShareText] = useState('');
-  const [displayedText, setDisplayedText] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const fullTextRef = useRef('');
-  const charIndexRef = useRef(0);
 
   // Sélectionner 5 questions aléatoires au démarrage
   useEffect(() => {
     const shuffled = [...questions].sort(() => 0.5 - Math.random());
     setSelectedQuestions(shuffled.slice(0, 5));
   }, []);
-
-  // Effet pour l'animation de texte
-  useEffect(() => {
-    if (!gameStarted || showResult) return;
-
-    // Initialiser le texte complet et réinitialiser l'index
-    fullTextRef.current = selectedQuestions[currentQuestion].context;
-    charIndexRef.current = 0;
-    setDisplayedText('');
-    setIsTyping(true);
-
-    const typingInterval = setInterval(() => {
-      if (charIndexRef.current < fullTextRef.current.length) {
-        // Assurer que le premier caractère est inclus
-        if (charIndexRef.current === 0) {
-          setDisplayedText(fullTextRef.current.charAt(0));
-          charIndexRef.current = 0;
-        } else {
-          setDisplayedText(
-            (prev) => prev + fullTextRef.current.charAt(charIndexRef.current)
-          );
-        }
-        charIndexRef.current++;
-      } else {
-        clearInterval(typingInterval);
-        setIsTyping(false);
-      }
-    }, 30); // Vitesse de frappe
-
-    return () => clearInterval(typingInterval);
-  }, [currentQuestion, gameStarted, showResult, selectedQuestions]);
 
   const handleAnswer = (isPhishing: boolean) => {
     const isCorrect =
@@ -81,7 +43,7 @@ function App() {
       setShareText(
         `${displayName} a obtenu le score de ${
           score + (isCorrect ? 1 : 0)
-        }/5 au test DetectFishing. Sauras-tu faire mieux ? Essaye sur : https://marin-dodouss.github.io/DetectFishing/`
+        }/5 au test DetectFishing. Sauras-tu faire mieux ?`
       );
     }
   };
@@ -233,7 +195,7 @@ function App() {
           <div className="bg-white p-8 rounded-lg shadow-md max-w-2xl w-full">
             <div className="mb-4 text-center">
               <span className="text-sm font-medium text-gray-500">
-                Question {currentQuestion} / {selectedQuestions.length}
+                Question {currentQuestion + 1} / {selectedQuestions.length}
               </span>
             </div>
 
@@ -245,8 +207,7 @@ function App() {
               />
               <h3 className="text-xl font-bold mb-2">Contexte</h3>
               <p className="min-h-[100px]">
-                {displayedText}
-                {isTyping && <span className="animate-pulse">|</span>}
+                {selectedQuestions[currentQuestion].context}
               </p>
             </div>
 
@@ -260,14 +221,12 @@ function App() {
               <button
                 onClick={() => handleAnswer(true)}
                 className="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 transition-colors"
-                disabled={isTyping}
               >
                 Oui, c'est du phishing
               </button>
               <button
                 onClick={() => handleAnswer(false)}
                 className="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition-colors"
-                disabled={isTyping}
               >
                 Non, c'est légitime
               </button>
