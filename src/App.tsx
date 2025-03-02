@@ -43,7 +43,7 @@ function App() {
       setShareText(
         `${displayName} a obtenu le score de ${
           score + (isCorrect ? 1 : 0)
-        }/5 au test DetectFishing. Sauras-tu faire mieux ?`
+        }/5 au test DetectFishing. Sauras-tu faire mieux ? Essaye sur : https://marin-dodouss.github.io/detectfishing/`
       );
     }
   };
